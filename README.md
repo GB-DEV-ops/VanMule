@@ -1,3 +1,5 @@
+<p align="center"><img src="build/banner.png" alt="VanMule" width="100%"></p>
+
 # VanMule
 
 A free voice changer and soundboard for Windows, with a gaming hub built in.

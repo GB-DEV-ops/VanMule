@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#141110">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<title>VanMule remote</title>
+<style>
+:root{--bg:#141110;--panel:#1d1916;--panel2:#272220;--line:#352e29;--fg:#f3ece5;--muted:#a3968a;--ember:#ff8a3d;--ember-ink:#1b0d03;--gold:#ffc861;--ok:#4ade80;--bad:#ff5a52;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.35 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{padding:calc(env(safe-area-inset-top) + 10px) 14px calc(env(safe-area-inset-bottom) + 24px)}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;touch-action:manipulation}
+header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+header img{width:34px;height:34px;border-radius:9px}
+header div{flex:1;min-width:0}header b{display:block;font-size:16px}
+#status{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#status.off{color:var(--bad)}
+.big{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.tg{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:14px;background:var(--panel);border:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.tg svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tg[aria-pressed="true"]{background:var(--ember);border-color:var(--ember);color:var(--ember-ink);font-weight:700}
+.tg.stop{color:var(--bad)}.tg.stop:active{background:var(--bad);color:#fff}
+.tg.mute[aria-pressed="true"]{background:var(--bad);border-color:var(--bad);color:#fff}
+.now{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:14px;font-size:13.5px;color:var(--muted)}.now b{color:var(--fg)}
+h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;display:flex;align-items:center;gap:8px}
+.seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:2px;margin-left:auto;text-transform:none;letter-spacing:0}
+.seg button{padding:5px 10px;border-radius:8px;font-size:12.5px;color:var(--muted)}.seg button[aria-pressed="true"]{background:var(--panel2);color:var(--fg);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.v{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-size:12.5px;text-align:center;min-height:84px}
+.v i{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:800;color:#fff;background:hsl(var(--h,20) 70% 45%)}
+.v[aria-pressed="true"]{border-color:var(--ember);box-shadow:0 0 0 2px var(--ember) inset}
+.s{padding:14px 8px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);font-size:13px;font-weight:600;min-height:64px;word-break:break-word;position:relative}
+.s:active{transform:scale(.97)}
+.s.on{background:var(--ember);color:var(--ember-ink);border-color:var(--ember)}
+.s .st{position:absolute;top:5px;right:7px;font-size:11px;color:var(--gold)}
+.q{width:100%;height:42px;border-radius:11px;border:1px solid var(--line);background:var(--panel);padding:0 12px;margin-bottom:8px}
+.empty{color:var(--muted);font-size:13.5px;padding:10px 2px}
+.wide{width:100%;padding:13px;border-radius:12px;background:var(--panel2);border:1px solid var(--ember);color:var(--ember);font-weight:700;margin:-4px 0 12px}
+.say{display:flex;gap:8px;margin-bottom:6px}.say input{flex:1;min-width:0;height:42px;border-radius:11px;border:1px solid var(--line);background:var(--panel);padding:0 12px}.say button{padding:0 16px;border-radius:11px;background:var(--panel2);border:1px solid var(--line);font-weight:700}
+.sc{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-bottom:6px;font-size:14px}.sc b{font-variant-numeric:tabular-nums}.sc small{margin-left:auto;color:var(--muted)}.sc.live small{color:var(--bad)}
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.mg button{aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--panel2);border:1px solid var(--line);font-size:12px;font-weight:800;color:var(--muted)}.mg img{width:100%;height:100%;object-fit:cover}.mg button.ok{border-color:var(--ok)}
+.hv{display:flex;align-items:center;gap:10px;margin:-4px 0 12px;font-size:12.5px;color:var(--muted)}.hv input{flex:1;accent-color:var(--ember)}
+</style>
+</head>
+<body>
+<header><img src="icon.png" alt=""><div><b>VanMule remote</b><span id="status">Connecting…</span></div></header>
+<div class="big">
+  <button class="tg" id="bVc" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg>Voice</button>
+  <button class="tg" id="bHear" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M6 8.5a6 6 0 1 1 12 0c0 6-6 6-6 10a3 3 0 0 1-6 0"/><path d="M15 8.5a3 3 0 1 0-6 0"/></svg>Hear back</button>
+  <button class="tg mute" id="bMute" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span id="muteT">Mic on</span></button>
+  <button class="tg stop" id="bStop"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>Stop sounds</button>
+</div>
+<div class="hv" id="hv" hidden><span>Hear back</span><input type="range" id="hearVol" min="0" max="100"><b id="hearV"></b></div>
+<div class="now" id="now">Waiting for VanMule…</div>
+<button class="wide" id="bReplay" hidden>⟲ Save instant replay</button>
+<form class="say" id="sayForm"><input id="say" placeholder="Type something for your voice to say" maxlength="300" autocomplete="off"><button type="submit">Say</button></form>
+<div id="scoresBox"></div>
+<h2>Voices <span class="seg"><button data-vt="fav" aria-pressed="true">Favorites</button><button data-vt="all" aria-pressed="false">All</button></span></h2>
+<div class="grid" id="voices"></div>
+<h2>Soundboard <span class="seg"><button data-st="fav" aria-pressed="false">Favorites</button><button data-st="all" aria-pressed="true">All</button></span></h2>
+<input class="q" id="q" type="search" placeholder="Search sounds" autocomplete="off">
+<div class="grid" id="sounds"></div>
+<div id="memesBox"></div>
+<script>
+"use strict";
+const K = new URLSearchParams(location.search).get('k') || '';
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+let st = null, ver = 0, vt = 'fav', stab = 'all', q = '', ok = false;
+try { vt = localStorage.getItem('vmr-vt') || 'fav'; stab = localStorage.getItem('vmr-st') || 'all'; } catch {}
+function status(t, bad) { const el = $('#status'); el.textContent = t; el.classList.toggle('off', !!bad); }
+async function cmd(c) {
+  try { if (c.t !== 'hello' && navigator.vibrate) navigator.vibrate(12); } catch {}
+  try { const r = await fetch('/api/cmd?k=' + encodeURIComponent(K), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(c) }); if (r.status === 403) status('Link expired. Scan the QR code in VanMule again.', true); } catch { status('Can\'t reach VanMule', true); }
+}
+function render() {
+  if (!st) return;
+  if (st.theme) for (const [k, v] of Object.entries(st.theme)) if (v) document.documentElement.style.setProperty('--' + k, v);
+  $('#bVc').setAttribute('aria-pressed', !!st.vcOn); $('#bHear').setAttribute('aria-pressed', !!st.hear);
+  $('#bMute').setAttribute('aria-pressed', !!st.muted); $('#muteT').textContent = st.muted ? 'Muted' : 'Mic on';
+  $('#hv').hidden = !st.hear; const hv = $('#hearVol'); if (document.activeElement !== hv) hv.value = st.hearVol || 0; $('#hearV').textContent = (st.hearVol || 0) + '%';
+  $('#now').innerHTML = st.input !== 'live' ? 'The microphone is off. <button class="seg" style="margin-left:6px;padding:4px 10px" id="bMic">Start mic</button>' : (st.vcOn ? 'Talking as <b>' + esc(st.voiceName) + '</b>' : 'Voice changer is <b>off</b>');
+  const rb = $('#bReplay'); rb.hidden = !(st.replay && st.replay.on); if (st.replay) rb.textContent = '⟲ Save the last ' + st.replay.len + ' seconds';
+  $('#scoresBox').innerHTML = st.scores && st.scores.length ? '<h2>Scores</h2>' + st.scores.slice(0, 6).map((g) => `<div class="sc ${g.live ? 'live' : ''}"><span>${esc(g.a)}</span><b>${g.live || g.fin ? esc(g.as) : ''}</b><span>${g.live || g.fin ? '–' : '@'}</span><b>${g.live || g.fin ? esc(g.hs) : ''}</b><span>${esc(g.h)}</span><small>${g.fin ? 'Final' : esc(g.detail)}</small></div>`).join('') : '';
+  $('#memesBox').innerHTML = st.memes && st.memes.length ? '<h2>Memes <span style="text-transform:none;letter-spacing:0;font-size:12px">tap to copy on your PC</span></h2><div class="mg">' + st.memes.map((m) => `<button data-meme="${esc(m.file)}">${m.thumb ? `<img src="${m.thumb}" alt="">` : 'GIF'}</button>`).join('') + '</div>' : '';
+  const bm = $('#bMic'); if (bm) bm.onclick = () => cmd({ t: 'mic' });
+  document.querySelectorAll('[data-vt]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.vt === vt));
+  document.querySelectorAll('[data-st]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.st === stab));
+  const vs = (st.voices || []).filter((v) => vt === 'all' || v.fav);
+  $('#voices').innerHTML = vs.map((v) => `<button class="v" data-voice="${esc(v.id)}" aria-pressed="${st.vcOn && v.id === st.voiceId}"><i style="--h:${+v.hue || 20}">${esc((v.name || '?')[0])}</i>${esc(v.name)}</button>`).join('') || '<div class="empty">Star voices in VanMule to see them here, or tap All.</div>';
+  const playing = new Set(st.playing || []), ql = q.toLowerCase();
+  const ss = (st.sounds || []).filter((s) => (stab === 'all' || s.fav) && (!ql || s.name.toLowerCase().includes(ql)));
+  $('#sounds').innerHTML = ss.slice(0, 300).map((s) => `<button class="s ${playing.has(s.id) ? 'on' : ''}" data-sound="${esc(s.id)}">${s.fav ? '<span class="st">★</span>' : ''}${esc(s.name)}</button>`).join('') || `<div class="empty">${st.sounds && st.sounds.length ? 'No sounds match.' : 'Add sounds in VanMule\'s Soundboard.'}</div>`;
+}
+document.addEventListener('click', (e) => {
+  const v = e.target.closest('[data-voice]'); if (v) { cmd({ t: 'voice', id: v.dataset.voice }); return; }
+  const s = e.target.closest('[data-sound]'); if (s) { s.classList.add('on'); cmd({ t: 'sound', id: s.dataset.sound }); return; }
+  const mm = e.target.closest('[data-meme]'); if (mm) { mm.classList.add('ok'); cmd({ t: 'meme', file: mm.dataset.meme }); return; }
+  const a = e.target.closest('[data-vt]'); if (a) { vt = a.dataset.vt; try { localStorage.setItem('vmr-vt', vt); } catch {} render(); return; }
+  const b = e.target.closest('[data-st]'); if (b) { stab = b.dataset.st; try { localStorage.setItem('vmr-st', stab); } catch {} render(); return; }
+});
+$('#bVc').onclick = () => cmd({ t: 'vc' }); $('#bHear').onclick = () => cmd({ t: 'hear' }); $('#bMute').onclick = () => cmd({ t: 'mute' }); $('#bStop').onclick = () => cmd({ t: 'stopAll' });
+$('#bReplay').onclick = () => cmd({ t: 'replay' });
+$('#sayForm').onsubmit = (e) => { e.preventDefault(); const t = $('#say').value.trim(); if (t) { cmd({ t: 'tts', text: t }); $('#say').value = ''; } };
+$('#hearVol').onchange = (e) => cmd({ t: 'hearVol', v: +e.target.value });
+$('#q').oninput = (e) => { q = e.target.value; render(); };
+async function loop() {
+  for (;;) {
+    try {
+      const r = await fetch('/api/state?k=' + encodeURIComponent(K) + '&v=' + ver, { cache: 'no-store' });
+      if (r.status === 403) { status('Link expired. Scan the QR code in VanMule again.', true); return; }
+      const j = await r.json(); if (j.off) { status('The remote was turned off in VanMule', true); await new Promise((res) => setTimeout(res, 5000)); continue; }
+      ver = j.v; st = j.st; if (!ok) { ok = true; } status(st && st.name ? 'Connected to ' + st.name : 'Connected'); render();
+    } catch { ok = false; status('Can\'t reach VanMule. Is your phone on the same Wi-Fi?', true); await new Promise((res) => setTimeout(res, 2500)); }
+  }
+}
+loop(); cmd({ t: 'hello' });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) cmd({ t: 'hello' }); });
+</script>
+</body>
+</html>

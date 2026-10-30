@@ -1,0 +1,115 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>VanMule widget</title>
+<link rel="stylesheet" href="fonts.css">
+<style>
+:root{--fg:#f3ece5;--muted:rgba(243,236,229,.7);--ember:#ff8a3d}
+html,body{margin:0;height:100%;background:transparent;overflow:hidden;font-family:Figtree,system-ui,sans-serif;color:var(--fg)}
+.w{position:absolute;inset:4px;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.bar{position:absolute;top:0;left:0;right:0;height:26px;display:flex;justify-content:flex-end;align-items:center;gap:2px;padding:0 6px;opacity:0;transition:opacity .15s;-webkit-app-region:drag;z-index:5}
+.w:hover .bar,.w.edit .bar{opacity:1}
+.bar button{-webkit-app-region:no-drag;background:rgba(0,0,0,.35);border:0;color:#fff;width:22px;height:20px;border-radius:6px;cursor:pointer;font-size:11px}
+.bar button:hover{background:rgba(0,0,0,.6)}
+.body{flex:1;display:flex;flex-direction:column;min-height:0;padding:14px 14px 12px;-webkit-app-region:drag}
+.body textarea,.body input,.body button,.body select{-webkit-app-region:no-drag}
+.set{position:absolute;inset:4px;border-radius:16px;background:rgba(20,16,15,.97);padding:12px;display:none;flex-direction:column;gap:8px;z-index:6;overflow:auto;font-size:13px}
+.set.on{display:flex}.set label{display:flex;flex-direction:column;gap:3px;color:var(--muted)}
+.set input,.set select,.set textarea{background:#24201c;border:1px solid #3a332d;color:#f3ece5;border-radius:8px;padding:6px 8px;font:inherit}
+.set .row{display:flex;gap:8px;align-items:center;color:#f3ece5}
+.set .acts{display:flex;gap:6px;margin-top:auto}.set .acts button{flex:1;height:30px;border-radius:8px;border:0;cursor:pointer;font-weight:700}
+.pri{background:var(--ember);color:#1b0d03}.sec{background:#2d2723;color:#f3ece5}.bad{background:#4a1d1a;color:#ffb4ae}
+/* note */
+.note textarea{flex:1;width:100%;resize:none;border:0;outline:0;background:transparent;color:inherit;font:600 15px/1.45 Figtree,sans-serif}
+/* clock */
+.big{font-family:Unbounded,Figtree,sans-serif;font-weight:800;letter-spacing:-.02em;line-height:1}
+.sub{color:var(--muted);font-size:13px;margin-top:6px}
+.center{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+canvas{display:block}
+.mono{font-family:"JetBrains Mono",monospace}
+.stats .r{display:flex;justify-content:space-between;font-family:"JetBrains Mono",monospace;font-weight:700;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.stats .r span:first-child{color:var(--muted);font-weight:600}
+.cal{font-size:12px}.cal table{width:100%;border-collapse:collapse;text-align:center}.cal td,.cal th{padding:3px 0}.cal th{color:var(--muted);font-weight:600}.cal td.t{background:var(--ember);color:#1b0d03;border-radius:6px;font-weight:800}.cal td.o{opacity:.3}
+.photo{padding:0}.photo .img{flex:1;background:center/cover no-repeat}
+.stk .r{display:flex;justify-content:space-between;padding:3px 0;font-family:"JetBrains Mono",monospace;font-size:13px}.up{color:#4ade80}.dn{color:#ff6b6b}
+</style></head>
+<body>
+<div class="w" id="w"><div class="bar"><button id="bSet" title="Settings">⚙</button><button id="bX" title="Remove widget">✕</button></div><div class="body" id="b"></div><div class="set" id="set"></div></div>
+<script src="perfdraw.js"></script>
+<script>
+const id=new URLSearchParams(location.search).get('id'); let C=null, T=null, last={};
+const $=s=>document.querySelector(s), esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const THEMES={glass:['rgba(20,16,15,.55)','#f3ece5'],dark:['rgba(16,13,12,.92)','#f3ece5'],ember:['linear-gradient(150deg,#ff8a3d,#e0532c)','#1b0d03'],yellow:['#ffe27a','#3a2d00'],pink:['#ffb3d1','#3d0f22'],mint:['#a7f3d0','#06302a'],sky:['#b9e1ff','#072a45'],paper:['#f7f1e6','#2b2622'],clear:['transparent','#ffffff']};
+function save(p){ Object.assign(C,p); return MINI.call({op:'wgSave',id,patch:p}); }
+function style(){ const t=THEMES[C.theme||defTheme()]||THEMES.glass, w=$('#w'); w.style.background=t[0]; w.style.color=t[1]; w.style.backdropFilter=C.theme==='glass'||!C.theme?'blur(10px)':''; w.style.boxShadow=C.theme==='clear'?'none':''; w.style.fontSize=(C.scale||1)*100+'%'; document.documentElement.style.setProperty('--muted',t[1]==='#f3ece5'||t[1]==='#ffffff'?'rgba(243,236,229,.7)':'rgba(0,0,0,.55)'); }
+function defTheme(){ return C.kind==='note'?'yellow':C.kind==='photo'?'clear':'glass'; }
+/* ---------------- renderers ---------------- */
+const R={
+ note(){ $('#b').className='body note'; $('#b').innerHTML=`<textarea id="ta" placeholder="Type a note…" spellcheck="false">${esc(C.text||'')}</textarea>`; let t; $('#ta').oninput=e=>{ clearTimeout(t); t=setTimeout(()=>save({text:e.target.value}),400); }; },
+ clock(){ $('#b').className='body center'; const tick=()=>{ const d=new Date(), tz=C.tz||undefined; let tm, dt; try{ tm=d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:C.secs?'2-digit':undefined,hour12:C.h24?false:undefined,timeZone:tz}); dt=d.toLocaleDateString([], {weekday:'long',month:'long',day:'numeric',timeZone:tz}); }catch{ tm=d.toLocaleTimeString(); dt=d.toDateString(); }
+     if(C.style==='analog'){ drawAnalog(d,tz); } else $('#b').innerHTML=`<div class="big" style="font-size:${Math.max(24,innerWidth/6)}px">${tm}</div><div class="sub">${esc(C.label||dt)}</div>`; };
+   tick(); T=setInterval(()=>{ if(!document.hidden) tick(); },1000); },
+ async weather(){ $('#b').className='body center'; const go=async()=>{ if(!C.lat){ $('#b').innerHTML='<div class="sub">Open ⚙ and type your city</div>'; return; }
+     try{ const w=await MINI.call({op:'weather',lat:C.lat,lon:C.lon}); last.w=w; const cur=w&&(w.current||w); const t=cur.temp??cur.temperature??cur.temperature_2m, code=cur.code??cur.weathercode??cur.weather_code;
+       const f=C.unit==='c'?t:(t!=null?t*9/5+32:null), icon=wIcon(code), hi=w.daily&&w.daily[0];
+       $('#b').innerHTML=`<div style="font-size:${Math.max(28,innerWidth/7)}px">${icon}</div><div class="big" style="font-size:${Math.max(26,innerWidth/7)}px">${f!=null?Math.round(f)+'°':'–'}</div><div class="sub">${esc(C.city||'')}${hi?` · H ${Math.round(C.unit==='c'?hi.max:hi.max*9/5+32)}° L ${Math.round(C.unit==='c'?hi.min:hi.min*9/5+32)}°`:''}</div>`; }catch(e){ $('#b').innerHTML=`<div class="sub">Weather unavailable</div>`; } };
+   go(); T=setInterval(()=>{ if(!document.hidden) go(); },15*60e3); },
+ countdown(){ $('#b').className='body center'; const tick=()=>{ const to=C.date?new Date(C.date):null; if(!to||isNaN(to)){ $('#b').innerHTML='<div class="sub">Open ⚙ to pick a date</div>'; return; }
+     let s=Math.max(0,Math.round((to-Date.now())/1000)); const d=Math.floor(s/86400); s%=86400; const h=Math.floor(s/3600); s%=3600; const m=Math.floor(s/60); s%=60;
+     $('#b').innerHTML=`<div class="sub" style="margin:0 0 6px;font-weight:700">${esc(C.label||'Countdown')}</div><div class="big mono" style="font-size:${Math.max(20,innerWidth/9)}px">${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}</div><div class="sub">${to.toLocaleDateString([], {weekday:'short',month:'short',day:'numeric',year:'numeric'})}</div>`; };
+   tick(); T=setInterval(()=>{ if(!document.hidden) tick(); },1000); },
+ photo(){ $('#b').className='body photo'; $('#b').innerHTML=C.img?`<div class="img" style="background-image:url('${C.img}');border-radius:16px"></div>`:'<div class="center"><div class="sub">Open ⚙ and pick a picture</div></div>'; },
+ quote(){ $('#b').className='body center'; $('#b').innerHTML=`<div style="font:700 ${Math.max(15,innerWidth/14)}px/1.35 Figtree,sans-serif">${esc(C.text||'Write something in ⚙')}</div>${C.label?`<div class="sub">${esc(C.label)}</div>`:''}`; },
+ stats(){ $('#b').className='body stats'; const paint=s=>{ if(!s) return; const gb=b=>b!=null?(b/1073741824).toFixed(1):'–';
+     $('#b').innerHTML=[['CPU',s.cpu!=null?Math.round(s.cpu)+'%':'–'],['GPU',s.gpu!=null?Math.round(s.gpu)+'%':'–'],s.gpuTemp!=null?['GPU temp',s.gpuTemp+'°C']:null,s.cpuTemp!=null?['CPU temp',s.cpuTemp+'°C']:null,['RAM',gb(s.ramUsed)+' / '+gb(s.ramTotal)+' GB'],s.ping!=null?['Ping',s.ping+' ms']:null].filter(Boolean).map(([k,v])=>`<div class="r"><span>${k}</span><span>${v}</span></div>`).join(''); };
+   MINI.call({op:'stats'}).then(paint); MINI.on(m=>{ if(m.t==='stats') paint(m.s); }); },
+ gauges(){ $('#b').className='body center'; $('#b').innerHTML='<div id="pd" style="justify-content:center"></div>'; const pd=$('#pd'); let lastS={};
+   const paint=s=>{ if(s) lastS=s; const items=C.items||['cpu','gpu','gpuTemp'], st=C.style||'dials', n=Math.max(1,items.length), W=innerWidth-36, Hh=innerHeight-36; let fit, cols=n;
+     if(st==='dials'){ let best=10; for(let c=1;c<=n;c++){ const rows=Math.ceil(n/c), f=Math.min(W/(c*5.15), Hh/(rows*4.7)); if(f>best){ best=f; cols=c; } } fit=Math.floor(Math.min(40,best)); } else fit=Math.floor(Math.max(10,Math.min(26,W/15.5, Hh/(n*(st==='graph'?3.5:2.0)))));
+     PerfDraw.render(pd,lastS,{style:st,items,color:C.accent||'#ff8a3d',textColor:getComputedStyle($('#w')).color,byLoad:C.byLoad!==false,glow:true,needle:!!C.needle,size:fit,labels:true,cols,layout:'list'}); };
+   addEventListener('resize',()=>paint());
+   MINI.call({op:'stats'}).then(paint); MINI.on(m=>{ if(m.t==='stats'&&!document.hidden) paint(m.s); }); },
+ calendar(){ $('#b').className='body cal'; const paint=()=>{ const d=new Date(), y=d.getFullYear(), m=d.getMonth(), first=new Date(y,m,1).getDay(), days=new Date(y,m+1,0).getDate(); let cells='', n=1-first;
+     for(let r=0;r<6&&n<=days;r++){ cells+='<tr>'; for(let c=0;c<7;c++,n++){ const dd=new Date(y,m,n); cells+=`<td class="${n===d.getDate()?'t':''} ${n<1||n>days?'o':''}">${dd.getDate()}</td>`; } cells+='</tr>'; }
+     $('#b').innerHTML=`<div style="font:800 15px Unbounded,Figtree;margin-bottom:6px">${d.toLocaleDateString([], {month:'long',year:'numeric'})}</div><table><tr>${['S','M','T','W','T','F','S'].map(x=>`<th>${x}</th>`).join('')}</tr>${cells}</table>`; };
+   paint(); T=setInterval(()=>{ if(!document.hidden) paint(); },60e3); },
+ async stocks(){ $('#b').className='body stk'; const go=async()=>{ const syms=(C.symbols||'SPY,AAPL,NVDA').split(/[\s,]+/).filter(Boolean).slice(0,8); const rows=[];
+     for(const s of syms){ try{ const q=await MINI.call({op:'quote',symbol:s}); rows.push(`<div class="r"><span>${esc(s.toUpperCase())}</span><span>${q&&q.price!=null?q.price.toFixed(2):'–'} <b class="${q&&q.pct>=0?'up':'dn'}">${q&&q.pct!=null?(q.pct>=0?'+':'')+q.pct.toFixed(2)+'%':''}</b></span></div>`); }catch{ rows.push(`<div class="r"><span>${esc(s)}</span><span>–</span></div>`); } }
+     $('#b').innerHTML=rows.join(''); };
+   go(); T=setInterval(()=>{ if(!document.hidden) go(); },5*60e3); },
+};
+function wIcon(c){ c=+c; return c===0?'☀️':c<=2?'🌤️':c===3?'☁️':c<=48?'🌫️':c<=67?'🌧️':c<=77?'🌨️':c<=82?'🌦️':c<=86?'🌨️':c>=95?'⛈️':'🌡️'; }
+function drawAnalog(d,tz){ const s=Math.min(innerWidth,innerHeight)-40; let cv=$('#cv'); if(!cv){ $('#b').innerHTML=`<canvas id="cv"></canvas><div class="sub" id="cl"></div>`; cv=$('#cv'); }
+  const dpr=devicePixelRatio||1; cv.width=s*dpr; cv.height=s*dpr; cv.style.width=s+'px'; cv.style.height=s+'px'; const c=cv.getContext('2d'); c.scale(dpr,dpr); const r=s/2, col=getComputedStyle($('#w')).color;
+  let p; try{ p=new Date(d.toLocaleString('en-US',{timeZone:tz})); }catch{ p=d; }
+  c.translate(r,r); c.strokeStyle=col; c.fillStyle=col; c.lineCap='round'; c.globalAlpha=.25; c.lineWidth=2; c.beginPath(); c.arc(0,0,r-2,0,6.283); c.stroke(); c.globalAlpha=1;
+  for(let i=0;i<12;i++){ const a=i*Math.PI/6; c.lineWidth=i%3?2:4; c.beginPath(); c.moveTo(Math.sin(a)*(r-10),-Math.cos(a)*(r-10)); c.lineTo(Math.sin(a)*(r-18),-Math.cos(a)*(r-18)); c.stroke(); }
+  const hand=(a,l,w,colr)=>{ c.strokeStyle=colr||col; c.lineWidth=w; c.beginPath(); c.moveTo(0,0); c.lineTo(Math.sin(a)*l,-Math.cos(a)*l); c.stroke(); };
+  hand((p.getHours()%12+p.getMinutes()/60)*Math.PI/6,r*.5,5); hand((p.getMinutes()+p.getSeconds()/60)*Math.PI/30,r*.75,3.5); if(C.secs!==false) hand(p.getSeconds()*Math.PI/30,r*.82,1.5,'#ff8a3d');
+  $('#cl').textContent=C.label||''; }
+/* ---------------- settings panel ---------------- */
+function settings(){ const s=$('#set'); s.classList.add('on'); const th=Object.keys(THEMES).map(k=>`<option value="${k}" ${ (C.theme||defTheme())===k?'selected':''}>${k[0].toUpperCase()+k.slice(1)}</option>`).join('');
+  const extra={ clock:`<label>Style<select id="sStyle"><option value="digital">Digital</option><option value="analog" ${C.style==='analog'?'selected':''}>Analog</option></select></label><label>Time zone (blank = this PC)<input id="sTz" value="${esc(C.tz||'')}" placeholder="e.g. America/Los_Angeles"></label><label>Label<input id="sLabel" value="${esc(C.label||'')}"></label><div class="row"><input type="checkbox" id="sSecs" ${C.secs?'checked':''}> Show seconds</div><div class="row"><input type="checkbox" id="sH24" ${C.h24?'checked':''}> 24-hour</div>`,
+    weather:`<label>City<input id="sCity" value="${esc(C.city||'')}" placeholder="e.g. Philadelphia"></label><label>Units<select id="sUnit"><option value="f">°F</option><option value="c" ${C.unit==='c'?'selected':''}>°C</option></select></label>`,
+    countdown:`<label>Counting down to<input id="sDate" type="datetime-local" value="${esc(C.date||'')}"></label><label>Label<input id="sLabel" value="${esc(C.label||'')}"></label>`,
+    photo:`<button class="sec" id="sPick" style="height:30px;border-radius:8px;border:0">Pick a picture…</button>`,
+    quote:`<label>Text<textarea id="sText" rows="3">${esc(C.text||'')}</textarea></label><label>Small line under it<input id="sLabel" value="${esc(C.label||'')}"></label>`,
+    gauges:`<label>Style<select id="sGStyle">${[['dials','Dials'],['bars','Bars'],['graph','Graphs'],['text','Text']].map(([k,n])=>`<option value="${k}" ${(C.style||'dials')===k?'selected':''}>${n}</option>`).join('')}</select></label><label>Show (comma separated: cpu, gpu, cpuTemp, gpuTemp, ram, vram, ping, fps, gpuPower, fan)<input id="sGItems" value="${esc((C.items||['cpu','gpu','gpuTemp']).join(', '))}"></label><label>Accent color<input type="color" id="sGAccent" value="${esc(C.accent||'#ff8a3d')}"></label><div class="row"><input type="checkbox" id="sGLoad" ${C.byLoad!==false?'checked':''}> Color by load (green → red)</div><div class="row"><input type="checkbox" id="sGNeedle" ${C.needle?'checked':''}> Needle on dials</div>`,
+    stocks:`<label>Symbols<input id="sSyms" value="${esc(C.symbols||'SPY,AAPL,NVDA')}"></label>` }[C.kind]||'';
+  s.innerHTML=`<b style="color:#f3ece5">Widget settings</b>${extra}<label>Look<select id="sTheme">${th}</select></label><label>Size<input type="range" id="sScale" min="0.7" max="1.8" step="0.05" value="${C.scale||1}"></label>
+    <label>Where it sits<select id="sLayer">${[['back','On the desktop (behind windows)'],['normal','Normal window'],['top','Always on top']].map(([k,n])=>`<option value="${k}" ${(C.layer||(C.top?'top':'back'))===k?'selected':''}>${n}</option>`).join('')}</select></label><div class="row"><input type="checkbox" id="sThrough" ${C.through?'checked':''}> Clicks go through (turn off from VanMule → Widgets)</div>
+    <div class="acts"><button class="sec" id="sCancel">Close</button><button class="pri" id="sOk">Save</button></div>`;
+  const v=k=>{ const e=$('#'+k); return e?(e.type==='checkbox'?e.checked:e.value):undefined; };
+  if($('#sPick')) $('#sPick').onclick=async()=>{ try{ const u=await MINI.call({op:'pickImage',id}); if(u){ await save({img:u}); start(); } }catch(e){ alert(e.message); } };
+  $('#sCancel').onclick=()=>s.classList.remove('on');
+  $('#sOk').onclick=async()=>{ const p={theme:v('sTheme'),scale:+v('sScale'),layer:v('sLayer'),top:v('sLayer')==='top',through:v('sThrough')};
+    if($('#sGStyle')){ p.style=v('sGStyle'); p.items=v('sGItems').split(/[\s,]+/).filter(x=>PerfDraw.LBL[x]); p.accent=v('sGAccent'); p.byLoad=v('sGLoad'); p.needle=v('sGNeedle'); }
+    for(const [k,f] of [['sStyle','style'],['sTz','tz'],['sLabel','label'],['sSecs','secs'],['sH24','h24'],['sUnit','unit'],['sDate','date'],['sText','text'],['sSyms','symbols']]) if($('#'+k)) p[f]=v(k);
+    if($('#sCity')&&v('sCity')!==C.city){ p.city=v('sCity'); try{ const g=await MINI.call({op:'geo',q:p.city}); const x=Array.isArray(g)?g[0]:g&&(g.results?g.results[0]:g); if(x){ p.lat=x.lat??x.latitude; p.lon=x.lon??x.longitude; p.city=x.name||p.city; } }catch{} }
+    await save(p); s.classList.remove('on'); start(); };
+}
+function start(){ clearInterval(T); T=null; style(); (R[C.kind]||R.quote)(); }
+$('#bSet').onclick=settings;
+$('#bX').onclick=()=>{ if(confirm('Remove this widget?')) MINI.call({op:'wgRemove',id}); };
+MINI.on(m=>{ if(m.t==='cfg'&&m.cfg){ const changed=JSON.stringify(m.cfg)!==JSON.stringify(C); C=m.cfg; if(changed&&!$('#set').classList.contains('on')) start(); } });
+addEventListener('resize',()=>{ if(C&&(C.kind==='clock'||C.kind==='quote'||C.kind==='countdown')) { clearInterval(T); start(); } });
+MINI.call({op:'wgCfg',id}).then(c=>{ if(!c) return; C=c; start(); });
+</script></body></html>

@@ -1,0 +1,19 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>VanMule crosshair</title>
+<style>html,body{margin:0;width:100%;height:100%;background:transparent;overflow:hidden}canvas{position:fixed;inset:0;width:100%;height:100%}</style>
+<script src="crosshair-draw.js"></script></head>
+<body><canvas id="c"></canvas>
+<script>
+"use strict";
+let cur = null, raf = 0;
+const t0 = performance.now();
+function paint() {
+  const cv = document.getElementById('c'), d = window.devicePixelRatio || 1;
+  const w = Math.round(innerWidth * d), h = Math.round(innerHeight * d); if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+  const g = cv.getContext('2d'); g.clearRect(0, 0, cv.width, cv.height);
+  if (cur) CrosshairDraw.draw(g, cur, Math.floor(cv.width / 2), Math.floor(cv.height / 2), 1, (performance.now() - t0) / 1000, paint);
+}
+function loop() { paint(); raf = requestAnimationFrame(loop); }
+window.setCrosshair = (c) => { cur = c; cancelAnimationFrame(raf); raf = 0; if (cur && CrosshairDraw.animated(cur)) loop(); else paint(); };
+addEventListener('resize', paint);
+</script></body></html>

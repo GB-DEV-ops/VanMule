@@ -1,0 +1,29 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>VanMule performance overlay</title>
+<link rel="stylesheet" href="fonts.css">
+<style>
+html,body{margin:0;background:transparent;overflow:hidden;user-select:none}
+#m{display:inline-flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;font-family:"JetBrains Mono",Consolas,monospace;font-weight:700;line-height:1.25;white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.9),0 0 1px #000}
+#m.row{flex-direction:row;gap:14px}
+#m .r{display:flex;gap:8px;justify-content:space-between}
+#m .k{opacity:.7;font-weight:600}
+#m .v.warn{color:#facc15}#m .v.hot{color:#ff5a52}
+#m.unlocked{outline:2px dashed rgba(255,255,255,.6);cursor:move;-webkit-app-region:drag}
+#hint{display:none;font:600 10px Figtree,sans-serif;color:#fff;opacity:.8;margin-top:3px;white-space:nowrap}
+#m.unlocked + #hint{display:block}
+</style></head>
+<body><div id="wrap" style="display:inline-block"><div id="m"></div><div id="hint">Drag to move · lock it in VanMule</div></div>
+<script src="perfdraw.js"></script>
+<script>
+let cfg={items:['fps','cpu','gpu','gpuTemp','ram'],color:'#ffb347',bg:.45,size:14,layout:'list',lock:true,labels:true,style:'text'}, last=null, lastSize='';
+function draw(){
+  const m=document.getElementById('m'), s=last||{};
+  m.className=(cfg.lock?'':'unlocked'); m.style.color=cfg.color; m.style.background=`rgba(10,8,8,${cfg.bg})`;
+  if(!(cfg.items||[]).length){ m.innerHTML='<div class="r"><span class="k">Pick some stats in VanMule</span></div>'; }
+  else PerfDraw.render(m,s,Object.assign({},cfg,{size:cfg.style==='dials'?Math.max(12,cfg.size):cfg.size}));
+  const w=document.getElementById('wrap'), r=w.getBoundingClientRect(), key=Math.ceil(r.width)+'x'+Math.ceil(r.height);
+  if(key!==lastSize){ lastSize=key; MINI.call({op:'mtSize',w:r.width+2,h:r.height+2}); }
+}
+MINI.on(m=>{ if(m.t==='stats'){ last=m.s; if(m.cfg) cfg=Object.assign(cfg,m.cfg); draw(); } if(m.t==='cfg'){ cfg=Object.assign(cfg,m.cfg); lastSize=''; draw(); } });
+MINI.call({op:'mtCfg'}).then(c=>{ if(c) cfg=Object.assign(cfg,c); draw(); });
+</script></body></html>

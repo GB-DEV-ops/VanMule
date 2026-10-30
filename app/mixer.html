@@ -1,0 +1,88 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>VanMule volume mixer</title>
+<link rel="stylesheet" href="fonts.css">
+<style>
+:root{--op:.94;--panel:#24201c;--line:#3a332d;--fg:#f3ece5;--muted:#a3968a;--ember:#ff8a3d;--fs:13.5px}
+html,body{margin:0;height:100%;background:transparent;color:var(--fg);font-family:Figtree,system-ui,sans-serif;font-size:var(--fs);user-select:none}
+.card{position:absolute;inset:6px;background:rgba(20,16,15,var(--op));border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.head{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--line);-webkit-app-region:drag}
+.head b{flex:1;font-family:Unbounded,Figtree,sans-serif;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.head button{-webkit-app-region:no-drag;background:none;border:0;color:var(--muted);font-size:14px;min-width:26px;height:26px;border-radius:6px;cursor:pointer;padding:0 6px}.head button:hover{background:var(--panel);color:var(--fg)}
+.head button.tone{color:var(--ember);font-weight:700;font-size:12px;border:1px solid rgba(255,138,61,.4)}
+.dev{padding:5px 12px 0;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list{flex:1;overflow-y:auto;overflow-x:hidden;padding:4px 8px 10px}
+.row{display:grid;grid-template-columns:28px minmax(0,1fr) 40px;grid-template-rows:auto auto;column-gap:8px;align-items:center;padding:6px;border-radius:10px}
+.row:hover{background:rgba(255,255,255,.04)}.row.master{background:rgba(255,138,61,.08);margin-bottom:4px}
+.ico{grid-row:1/3;width:26px;height:26px;border-radius:6px;display:grid;place-items:center;background:var(--panel);font-size:14px;overflow:hidden}.ico img{width:24px;height:24px}
+.nm{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nm small{color:var(--muted);font-weight:500;margin-left:6px}
+.pct{grid-row:1/3;grid-column:3;text-align:right;font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted)}
+.ctl{display:flex;align-items:center;gap:6px}.ctl button{background:none;border:0;cursor:pointer;font-size:14px;width:22px;padding:0;color:var(--fg)}
+input[type=range]{flex:1;min-width:0;accent-color:var(--ember);height:16px}.ctl{min-width:0}
+.row.muted .nm,.row.muted input{opacity:.45}
+/* compact */
+body.compact{--fs:12px}body.compact .ctl{min-width:0}body.compact input[type=range]{min-width:0;width:100%}body.compact .row{grid-template-columns:20px minmax(54px,.8fr) 30px minmax(0,1.4fr);grid-template-rows:auto;padding:3px 6px}body.compact .ico{grid-row:auto;width:20px;height:20px;font-size:11px}body.compact .ico img{width:18px;height:18px}body.compact .pct{grid-row:auto;grid-column:auto}body.compact .nm small{display:none}body.compact .dev{display:none}
+/* large */
+body.large{--fs:15.5px}body.large .row{grid-template-columns:40px minmax(0,1fr) 46px;padding:10px}body.large .ico{width:38px;height:38px;font-size:20px}body.large .ico img{width:32px;height:32px}body.large input[type=range]{height:22px}
+/* mini: vertical sliders side by side */
+body.mini .list{display:flex;gap:4px;overflow-x:auto;overflow-y:hidden;padding:6px 8px}
+body.mini .row{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:58px;max-width:64px;padding:6px 2px}
+body.mini .ico{width:24px;height:24px}body.mini .nm{font-size:10.5px;max-width:60px;text-align:center}body.mini .nm small{display:none}body.mini .pct{order:3;font-size:10.5px}
+body.mini .ctl{flex-direction:column-reverse;flex:1}body.mini input[type=range]{writing-mode:vertical-lr;direction:rtl;width:18px;flex:1;min-height:70px}
+body.mini .dev{display:none}
+.menu{position:absolute;top:44px;right:12px;background:#1d1917;border:1px solid var(--line);border-radius:12px;padding:10px;display:none;flex-direction:column;gap:8px;z-index:5;min-width:210px;box-shadow:0 8px 24px rgba(0,0,0,.5);font-size:13px}
+.menu.on{display:flex}.menu b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.seg{display:flex;gap:3px;background:var(--panel);padding:3px;border-radius:8px}.seg button{flex:1;background:none;border:0;color:var(--muted);padding:5px 4px;border-radius:6px;cursor:pointer;font:600 12px Figtree}.seg button[aria-pressed=true]{background:var(--ember);color:#1b0d03}
+.menu label{display:flex;gap:6px;align-items:center}.menu .btns{display:flex;gap:4px}.menu .btns button{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--fg);border-radius:7px;padding:5px;cursor:pointer;font:600 12px Figtree}.menu .btns button:hover{border-color:var(--ember)}
+.empty{color:var(--muted);padding:16px;text-align:center}.err{color:#ff8f87;padding:10px 12px;font-size:12.5px}
+</style></head>
+<body><div class="card">
+  <div class="head"><span>🔊</span><b>Volume mixer</b><button class="tone" id="tone" title="Play a short test tone">♪ Test</button><button id="gear" title="Size and options">⚙</button><button id="x" title="Close (or press the shortcut again)">✕</button></div>
+  <div class="dev" id="dev"></div>
+  <div class="list" id="list"><div class="empty">Loading…</div></div>
+  <div class="menu" id="menu">
+    <b>Size</b><div class="seg" id="sizes"></div>
+    <b>See-through</b><input type="range" id="op" min="0.5" max="1" step="0.02">
+    <b>Test tone</b>
+    <div class="btns"><button data-tt="both">Both</button><button data-tt="left">Left</button><button data-tt="right">Right</button><button data-tt="sweep">Sweep</button></div>
+    <label><input type="checkbox" id="showTone"> Show the ♪ Test button</label>
+  </div>
+</div>
+<script>
+let st=null, drag=null, prefs={size:'normal',opacity:.94,tone:true};
+const $=s=>document.querySelector(s), esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const SIZES=[['mini','Mini'],['compact','Compact'],['normal','Normal'],['large','Large']];
+function applyPrefs(){ document.body.className=prefs.size; document.documentElement.style.setProperty('--op',prefs.opacity); $('#tone').style.display=prefs.tone===false?'none':'';
+  $('#sizes').innerHTML=SIZES.map(([k,n])=>`<button data-size="${k}" aria-pressed="${prefs.size===k}">${n}</button>`).join(''); $('#op').value=prefs.opacity; $('#showTone').checked=prefs.tone!==false; }
+function row(a,master){ const v=Math.round((a.vol||0)*100), mini=prefs.size==='mini';
+  return `<div class="row ${master?'master':''} ${a.mute?'muted':''}" data-k="${master?'master':a.pid}" title="${esc(master?'Master volume':a.label)}"><div class="ico">${master?'🔈':a.icon?`<img src="${a.icon}">`:a.sys?'🔔':'🎵'}</div>
+    <div class="nm">${esc(master?(mini?'Master':'Master volume'):a.label)}${!master&&a.state===1?'<small>playing</small>':''}</div><div class="pct">${a.mute?'muted':v}</div>
+    <div class="ctl"><button data-mute title="${a.mute?'Unmute':'Mute'}">${a.mute?'🔇':'🔊'}</button><input type="range" min="0" max="100" value="${v}"></div></div>`; }
+function draw(){ if(!st) return; $('#dev').textContent=st.dev?('Output: '+st.dev):''; if(drag) return;
+  $('#list').innerHTML=row({vol:st.vol,mute:st.mute},true)+((st.apps||[]).map(a=>row(a)).join('')||'<div class="empty">No apps are using sound right now.</div>'); }
+async function load(){ try{ const r=await MINI.call({op:'mixer'}); if(r&&r.error){ $('#list').innerHTML=`<div class="err">${esc(r.error)}</div>`; return; } st=r; draw(); }catch(e){ $('#list').innerHTML=`<div class="err">${esc(e.message)}</div>`; } }
+function find(k){ return k==='master'?{master:true}:(st.apps||[]).find(a=>String(a.pid)===k); }
+async function set(k,patch){ const a=find(k); if(!a) return; let r=null; for(const pid of a.master?[0]:(a.pids||[a.pid])) r=await MINI.call(Object.assign({op:'mixSet',pid,sys:!!a.sys,master:!!a.master},patch)); if(r&&!r.error){ st=r; if(!drag) draw(); } }
+let pend={};
+document.addEventListener('input',e=>{ const t=e.target; if(t.id==='op'){ prefs.opacity=+t.value; applyPrefs(); clearTimeout(pend.op); pend.op=setTimeout(()=>MINI.call({op:'mxPrefs',set:{opacity:prefs.opacity}}),250); return; }
+  if(t.type!=='range') return; const r=t.closest('.row'), k=r.dataset.k, v=t.value/100; drag=k; r.querySelector('.pct').textContent=Math.round(v*100); clearTimeout(pend[k]); pend[k]=setTimeout(()=>set(k,{vol:v}),60); });
+document.addEventListener('change',e=>{ const t=e.target; if(t.id==='showTone'){ prefs.tone=t.checked; applyPrefs(); MINI.call({op:'mxPrefs',set:{tone:prefs.tone}}); return; }
+  if(t.type==='range'&&t.closest('.row')){ const k=t.closest('.row').dataset.k; setTimeout(()=>{ drag=null; set(k,{vol:t.value/100}); },80); } });
+document.addEventListener('click',e=>{ const t=e.target;
+  const b=t.closest('[data-mute]'); if(b){ const k=b.closest('.row').dataset.k, a=k==='master'?{mute:st.mute}:find(k); set(k,{mute:!a.mute}); return; }
+  const sz=t.closest('[data-size]'); if(sz){ prefs.size=sz.dataset.size; applyPrefs(); draw(); MINI.call({op:'mxPrefs',set:{size:prefs.size}}); return; }
+  const tt=t.closest('[data-tt]'); if(tt){ tone(tt.dataset.tt); return; }
+  if(!t.closest('#menu')&&!t.closest('#gear')) $('#menu').classList.remove('on'); });
+/* test tone: a soft 440 Hz beep (or left/right/sweep) through this app, so you can check levels and which speaker is which */
+let AC=null;
+function tone(kind){ try{ AC=AC||new AudioContext(); const t=AC.currentTime, o=AC.createOscillator(), g=AC.createGain(), p=AC.createStereoPanner(); o.type='sine'; o.frequency.value=440;
+  const dur=kind==='sweep'?2.4:1.2; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.35,t+.05); g.gain.setValueAtTime(.35,t+dur-.15); g.gain.linearRampToValueAtTime(0,t+dur);
+  if(kind==='left') p.pan.value=-1; else if(kind==='right') p.pan.value=1; else if(kind==='sweep'){ p.pan.setValueAtTime(-1,t); p.pan.linearRampToValueAtTime(1,t+dur); o.frequency.setValueAtTime(220,t); o.frequency.exponentialRampToValueAtTime(880,t+dur); }
+  o.connect(g); g.connect(p); p.connect(AC.destination); o.start(t); o.stop(t+dur+.05); }catch{} }
+$('#tone').onclick=()=>tone('both');
+$('#gear').onclick=()=>$('#menu').classList.toggle('on');
+$('#x').onclick=()=>MINI.call({op:'close'});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') MINI.call({op:'close'}); });
+MINI.on(m=>{ if(m.t==='prefs'){ prefs=Object.assign(prefs,m.prefs); applyPrefs(); draw(); } });
+MINI.call({op:'mxPrefs'}).then(p=>{ if(p) prefs=Object.assign(prefs,p); applyPrefs(); draw(); });
+load(); setInterval(()=>{ if(!document.hidden&&!drag) load(); },1500);
+</script></body></html>

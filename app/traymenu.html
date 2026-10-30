@@ -1,0 +1,58 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>VanMule</title>
+<link rel="stylesheet" href="fonts.css">
+<style>
+:root{--bg:#0e0c0b;--panel:#1a1614;--panel2:#24201c;--line:#332d28;--fg:#f3ece5;--muted:#a3968a;--dim:#6f655c;--ember:#ff8a3d;--ember-ink:#1b0d03;--ok:#4ade80}
+html,body{margin:0;height:100%;background:transparent;color:var(--fg);font:13.5px/1.35 Figtree,system-ui,sans-serif;user-select:none;overflow:hidden}
+.card{position:absolute;inset:6px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 34px rgba(0,0,0,.55);display:flex;flex-direction:column;overflow:hidden}
+.head{display:flex;align-items:center;gap:10px;padding:12px 14px;background:linear-gradient(135deg,color-mix(in srgb,var(--ember) 22%,var(--panel)),var(--panel))}
+.head img{width:34px;height:34px;border-radius:9px}
+.head b{display:block;font-family:Unbounded,Figtree,sans-serif;font-size:14px}
+.head small{color:var(--muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px;background:var(--dim)}.dot.on{background:var(--ok);box-shadow:0 0 6px var(--ok)}
+.body{flex:1;overflow:auto;padding:6px 8px 8px}
+.row{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:9px;cursor:pointer}
+.row:hover{background:var(--panel2)}
+.row .ic{width:20px;text-align:center;font-size:15px}
+.row .t{flex:1}.row .t small{display:block;color:var(--dim);font-size:11.5px}
+.sw{width:34px;height:20px;border-radius:999px;background:var(--line);position:relative;flex:none;transition:background .15s}
+.sw::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--muted);transition:left .15s,background .15s}
+.row.on .sw{background:var(--ember)}.row.on .sw::after{left:17px;background:#fff}
+.lbl{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);font-weight:700;margin:8px 8px 4px}
+.btns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:2px 4px}
+.btns button,.chips button{background:var(--panel2);border:1px solid var(--line);color:var(--fg);border-radius:9px;padding:8px 4px;cursor:pointer;font:600 12px Figtree,sans-serif;display:flex;flex-direction:column;align-items:center;gap:3px}
+.btns button span{font-size:16px}
+.btns button:hover,.chips button:hover{border-color:var(--ember)}
+.btns button.on{border-color:var(--ember);color:var(--ember)}
+.chips{display:flex;flex-wrap:wrap;gap:5px;padding:2px 4px}
+.chips button{flex-direction:row;padding:5px 10px;border-radius:999px;font-weight:600}
+.chips button.cur{background:var(--ember);color:var(--ember-ink);border-color:var(--ember)}
+.ev{padding:4px 8px;color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;border-radius:7px}.ev:hover{background:var(--panel2);color:var(--fg)}
+.foot{display:flex;gap:6px;padding:8px;border-top:1px solid var(--line)}
+.foot button{flex:1;height:34px;border-radius:9px;border:0;cursor:pointer;font:700 13px Figtree,sans-serif}
+.open{background:var(--ember);color:var(--ember-ink)}.quit{background:var(--panel2);color:var(--muted);border:1px solid var(--line)!important}.quit:hover{color:#ff8f87}
+</style></head>
+<body><div class="card"><div class="head"><img src="../build/icon.png" alt=""><div><b>VanMule</b><small id="sub">…</small></div></div><div class="body" id="b"></div>
+<div class="foot"><button class="open" data-a="open">Open VanMule</button><button class="quit" data-a="quit">Quit</button></div></div>
+<script>
+let st={};
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function draw(){
+  const r=(a,ic,t,on,sub)=>`<div class="row ${on?'on':''}" data-a="${a}"><span class="ic">${ic}</span><span class="t">${t}${sub?`<small>${esc(sub)}</small>`:''}</span><span class="sw"></span></div>`;
+  document.getElementById('sub').innerHTML=`<span class="dot ${st.mic?'on':''}"></span>${st.mic?(st.micMuted?'Mic muted':'Mic live'):'Mic off'} · ${esc(st.voice||'')}`;
+  document.getElementById('b').innerHTML=
+    r('vcToggle','🎙','Voice changer',st.vc,st.voice)+r('hearToggle','🎧','Hear myself',st.hear)+r('micMute','🔇','Mute microphone',st.micMuted)+r('bgToggle','🎵','Background music',st.bg)
+    +`<div class="lbl">Overlays</div>`+r('crosshairToggle','⌖','Crosshair',st.ch,st.chName)+r('metricsToggle','📊','Performance overlay (FPS)',st.mt)+r('liteToggle','⚡','Lite mode',st.lite,'Saves power and graphics memory')
+    +`<div class="btns" style="margin-top:6px"><button data-a="overlayToggle" class="${st.ov?'on':''}"><span>🗔</span>Mini overlay</button><button data-a="mixerToggle"><span>🔊</span>Volume mixer</button><button data-a="stopSounds"><span>⏹</span>Stop sounds</button></div>`
+    +((st.favs||[]).length?`<div class="lbl">Voices</div><div class="chips">${st.favs.map(v=>`<button data-a="voice:${esc(v.id)}" class="${v.id===st.voiceId?'cur':''}">${esc(v.name)}</button>`).join('')}</div>`:'')
+    +((st.events||[]).length?`<div class="lbl">Coming up</div>${st.events.slice(0,3).map(e=>`<div class="ev" data-a="view:watch" title="${esc(e.label)}">${esc(e.label)}</div>`).join('')}`:'');
+}
+document.addEventListener('click',e=>{ const a=e.target.closest('[data-a]'); if(!a) return; const k=a.dataset.a;
+  // flip the switch right away so it feels instant; the real state follows from VanMule
+  const map={vcToggle:'vc',hearToggle:'hear',micMute:'micMuted',bgToggle:'bg',crosshairToggle:'ch',metricsToggle:'mt',liteToggle:'lite'};
+  if(map[k]){ st[map[k]]=!st[map[k]]; draw(); }
+  MINI.call({op:'tray',act:k}); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') MINI.call({op:'tray',act:'close'}); });
+MINI.on(m=>{ if(m.t==='tray'){ st=m.st||{}; if(m.theme) for(const [k,v] of Object.entries(m.theme)) if(v) document.documentElement.style.setProperty('--'+k,v); draw(); } });
+MINI.call({op:'tray',act:'state'});
+</script></body></html>

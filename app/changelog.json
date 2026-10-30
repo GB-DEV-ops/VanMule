@@ -1,0 +1,441 @@
+[
+ {
+  "version": "3.23.3",
+  "date": "October 2026",
+  "items": [
+   "Recording works the way it did in 3.23.0 again: your voice comes through hear-back when game audio is recorded, and the 3.23.1–3.23.2 changes to the recording mix are undone",
+   "When the microphone can't be opened, the banner offers Run setup again and Pick a microphone, and explains when the default microphone is the VanMule cable"
+  ]
+ },
+ {
+  "version": "3.23.0",
+  "date": "October 2026",
+  "items": [
+   "The window opens filling the screen the first time, and after that comes back at the size and place you left it (maximized stays maximized)",
+   "Steam deals show up right away; the price-history columns fill in a few seconds later. The lookups behind them now run in parallel instead of one after another",
+   "Memes: drag a corner handle of a text box (or scroll on it) to resize, Duplicate / Copy / Paste text boxes (Ctrl+D, Ctrl+C, Ctrl+V on the picture), paste plain text to make a new box, arrow keys nudge, Delete removes",
+   "Stocks: the header always shows today's change, with the change over the selected range in its own chip",
+   "Crosshair: screen sizes are shown correctly on scaled displays (3840×2160, not 3841×2161)"
+  ]
+ },
+ {
+  "version": "3.22.0",
+  "date": "October 2026",
+  "items": [
+   "The Retro library (emulator) has been removed. The Arcade is now just VanMule's own 34 games, and the installer is about 50 MB smaller",
+   "If you played retro games before, your game files and saves are still in your VanMule folder (retro\\\\roms and retro\\\\saves under %AppData%\\\\VanMule); VanMule just doesn't use them any more"
+  ]
+ },
+ {
+  "version": "3.21.0",
+  "date": "October 2026",
+  "items": [
+   "VanMule no longer searches for, links to or downloads voice models. Add voices now only imports models you already have (your own, or ones you have permission to use), with a short set of rules on the page",
+   "A one-time notice before your first import: only use voices you're allowed to, and never to impersonate a real person",
+   "Built-in API keys moved out of the source code into keys.json, so the code can be shared publicly"
+  ]
+ },
+ {
+  "version": "3.20.0",
+  "date": "October 2026",
+  "items": [
+   "New Fast pitch tracker (FCPE) for AI voices: Settings → AI voices → Pitch tracker. It's about 7× smaller than the accurate one (48 MB, downloads the first time you pick it), takes less of your graphics card and processor, and keeps most of the precision. Pick Accurate (RMVPE) for the closest match, Basic for no model at all",
+   "Auto response time now also shortens the context window when your PC is struggling at the slowest setting, and restores it when there's room to spare",
+   "The AI voice status in the side panel shows a green / yellow / red load reading, so you can see at a glance whether your PC is keeping up"
+  ]
+ },
+ {
+  "version": "3.19.1",
+  "date": "October 2026",
+  "items": [
+   "Runs lighter: when nothing is playing, VanMule's window now uses about a tenth of the processor time it did before (it no longer redraws every frame with the microphone off, and the glowing mini overlay button stops pulsing after a few seconds)",
+   "Minimized or hidden in the tray now really counts as hidden: Arcade games, the emulator, live stats, the volume mixer and page refreshes pause until you come back (your voice keeps working)",
+   "Fewer background lookups: the ping in the performance overlay only runs when it's shown, Slickdeals results are reused for a few minutes, the crosshair check and per-game voice check run less often, and caches no longer grow while VanMule sits in the tray",
+   "Mic meters, the recording timer and sound progress bars only redraw what changed, and the recording dot pulses properly again",
+   "Fixes: settings search showed 'undefined' for some results, a stray scrollbar on the soundboard tabs, the 'Clicks go through' checkbox lined up on Widgets, easier-to-read Drops button, the Retro library count shows right away, a wider AI idle menu, and the push-to-talk helper closes if VanMule ever crashes"
+  ]
+ },
+ {
+  "version": "3.19.0",
+  "date": "October 2026",
+  "items": [
+   "Retro library (Arcade → Retro library): play your own classic game files, like Pokémon on Game Boy / GBA, NES, SNES, N64, DS, Genesis, Master System, Game Gear, PlayStation, PC Engine, Atari, Neo Geo Pocket, WonderSwan, Virtual Boy and arcade romsets. Add files or a whole folder, or drag them onto the page",
+   "Retro library: picks the right system, finds box art and official names, and keeps your in-game saves on your PC (copied every few seconds and when you leave, with a backup from before each session). Quick save/load states, full screen, controllers, screen filters, import/export save files and optional BIOS files",
+   "15 new Arcade games: Rock Drift, Hay Raiders, Mule Run, Gem Swap, Sudoku, Five Letters, FreeCell, Spider Solitaire, Crazy Eights, Texas Hold'em with a coach, Flip Discs, Sea Battle, Dots & Boxes, Mini Golf and Air Hockey",
+   "Arcade: search, favorites (☆ on any game), New and category filters, and game controller support for every game",
+   "Emulated games and Arcade games pause as soon as you leave the page, so they never slow down your voice or your PC game"
+  ]
+ },
+ {
+  "version": "3.18.3",
+  "date": "October 2026",
+  "items": [
+   "New tray menu: right-click the VanMule icon in the taskbar tray for a styled menu with on/off switches (voice changer, hear myself, mute mic, background music, crosshair, performance overlay, Lite mode), buttons for the mini overlay, volume mixer and stop sounds, your favorite voices, and what's coming up next"
+  ]
+ },
+ {
+  "version": "3.18.2",
+  "date": "October 2026",
+  "items": [
+   "Volume mixer: the Compact size no longer cuts off the sliders",
+   "Meme maker: 'Copy look' copies the font, size, colors, outline and style from another text box, or 'Apply to all' gives every box the same look",
+   "Fixed a second scroll bar showing at the right edge of the window",
+   "Drops: news without a picture now shows the article's photo; sports cards use Checklist Insider, Sports Card Investor and Beckett, and pick up new sets, checklists and box releases; a source that's down no longer shows a long error"
+  ]
+ },
+ {
+  "version": "3.18.1",
+  "date": "October 2026",
+  "items": [
+   "Yahoo Fantasy keys are built in: go to Watch → Fantasy and click Connect Yahoo, no keys to paste"
+  ]
+ },
+ {
+  "version": "3.18.0",
+  "date": "October 2026",
+  "items": [
+   "Pinball rebuilt as a full 'Night Run' table: wire ramp, orbit lane, hyperspace launch and skill shot, 5 pop bumpers, two drop-target banks, mission targets that pick your mission, a spinner, kickback, a center warp-hole 'reactor' with rank lights, multiball with jackpots, bonus multipliers, extra balls and a classic-style score display",
+   "New in the Arcade: Chess with a coach (grades every move from Best to Blunder and explains why: forks, pins, hanging pieces, back-rank threats, pawn structure and more; hints, opening names, an evaluation bar, a strategy guide and a post-game review), Checkers, and Blob Volleyball",
+   "Blackjack: a real table layout. The dealer sits across from you, chips stack in the betting circle, the rail holds your chips and Deal button, the action buttons sit on the felt, and coach tips appear as bubbles next to your hand",
+   "Block Stack: no more freeze after clearing a row, and Hold, Next and score panels are visible and centered",
+   "Four in a Row: Play again after every game (button, Enter or a click on the board), plus a fixed controls row",
+   "Shopping: Drops sits in the same tab row as the Slickdeals tabs with its own highlighted button, and the Drops page displays correctly",
+   "Stocks: the chart toolbar is grouped (Time range, Chart style, Draw, Compare) and indicators are toggle chips under 'On the price chart' and 'Below the chart'",
+   "Widgets can sit on the desktop behind your windows (the default), as a normal window, or always on top",
+   "Side bar: right-click any item to hide it, or use the new Edit side bar button. The Show names button and the side panel tab are easier to spot"
+  ]
+ },
+ {
+  "version": "3.17.1",
+  "date": "October 2026",
+  "items": [
+   "Screen check: fixed a false 'below full resolution' warning. VanMule now compares with the monitor's real native resolution (from the monitor itself) instead of the largest mode the graphics driver lists, which can include NVIDIA DSR/super resolution modes, and it understands screens turned to portrait",
+   "Screen warnings now name the monitor (for example \"Odyssey G80SD (Display 1)\") so you know which screen it means",
+   "The screen warning has Ignore (hides it for that screen and setting) and Don't check screens buttons. You can turn checks back on, or show ignored warnings again, under PC & performance → Screen check"
+  ]
+ },
+ {
+  "version": "3.17.0",
+  "date": "October 2026",
+  "items": [
+   "Performance overlay styles: Text, Dials, Bars or live Graphs. Color by load (green to red), glow, a needle on dials, dials per row, FPS dial maximum and label color, with a live preview",
+   "New PC dials widget for your desktop: glowing dials, bars or graphs for the stats and colors you pick",
+   "Your own colors: Settings → Themes → Your colors. Pick any accent and background color (or a quick preset) and VanMule works out the rest",
+   "Volume mixer overlay sizes: Mini (tall sliders side by side), Compact, Normal and Large, plus a see-through slider",
+   "Test tone in the volume mixer (and on the PC page): a short beep, left only, right only, or a sweep, to check your levels and speakers"
+  ]
+ },
+ {
+  "version": "3.16.0",
+  "date": "October 2026",
+  "items": [
+   "New PC & performance page. Performance overlay: FPS, 1% lows, frame time, CPU and GPU %, temperatures, graphics memory, RAM, GPU clock/power/fan, ping and more. Pick what it shows, put it in any corner (or drag it anywhere), choose the color, size and layout, and toggle it with a shortcut (Alt+F by default). FPS uses Intel's free PresentMon, downloaded the first time you turn it on",
+   "Volume mixer: every app's volume and mute in VanMule, and as a small overlay window on top of your game (Alt+Shift+V by default)",
+   "My build: VanMule reads your PC's parts (model, CPU, graphics card, RAM, motherboard, storage, monitors) and copies them as a table, plain text, or a Discord-friendly block",
+   "Screen check: a banner tells you if a monitor is stuck at 60 Hz (or below its full resolution) when it can do more, with a button to open the right Windows setting and step-by-step fixes",
+   "Desktop widgets: sticky notes, clock (digital or analog, any time zone), weather, calendar, countdown, PC stats, stocks, photo frame and custom text, each in its own little window on your desktop",
+   "Add voices: search voice models right in VanMule. voice-models.com is searched first, with Hugging Face and Hugging Face datasets as backups. 'Add to VanMule' downloads and imports the voice in one click",
+   "AI voices: a Reset to default button (pitch 0, volume 100, Balanced response time, noise removal on)",
+   "Side bar: grouped into Voice, Gaming and Hub, with a button at the bottom to show names next to the icons"
+  ]
+ },
+ {
+  "version": "3.15.0",
+  "date": "October 2026",
+  "items": [
+   "New Arcade page (joystick on the side bar): Pinball, Mule Muncher (maze chase), Snake, Brick Buster, Block Stack, Tank Duel (turn-based artillery), Four in a Row, Blob Soccer, Blob Hoops, Blackjack, Jacks or Better, Craps, Roulette, Solitaire, Mine Field and 2048. Only the game you open is loaded, and it pauses when you leave, so it doesn't slow down your voice or games",
+   "Casino games come with a strategy coach: Blackjack shows the best play for every hand against the dealer's card (with a full chart), Jacks or Better works out the best cards to hold, and Craps and Roulette explain the house edge of every bet",
+   "Shopping: deals open as tiles first, clearly marked as the Slickdeals front page (with Popular, Hot deals and Freebies tabs). More front-page deals are listed. Deals glow 🔥 Hot or 👍 Popular based on votes, comments, the Popular list and the discount, with a Best first sort and an 'only good deals' filter",
+   "Shopping → Drops: release news for sneakers, sports cards, Pokémon TCG and LEGO, plus any site's RSS feed you add, with alerts for your keywords",
+   "Built-in alert for good PC game deals on Slickdeals (on by default; turn it off under Your alerts). Your alerts and price watch now sit below the deals",
+   "Watch: tabs are grouped (Calendar, Sports, Shows, movies & games), and a Finance (earnings) checkbox hides stock earnings from the calendar",
+   "The right-hand panel can be hidden with the arrow at its top, and its sections (Pitch, Response time and the rest) collapse with a click"
+  ]
+ },
+ {
+  "version": "3.14.0",
+  "date": "October 2026",
+  "items": [
+   "New crosshair helper (Crosshair page → Open the crosshair helper, or the ▾ next to the crosshair switch). It checks the crosshair shows on your screen, walks you through fixes if it doesn't, and gives the exact setting to change for CS2, Valorant, Fortnite, Apex, Call of Duty, Overwatch 2, Rainbow Six Siege, PUBG, Marvel Rivals, The Finals, Battlefield, Rust and Tarkov",
+   "Check my game: switch to your game during a 10-second countdown and VanMule tells you whether the game is in exclusive fullscreen, on a different screen than the crosshair, or has fullscreen optimizations turned off, with the fix for each",
+   "The helper opens by itself the first time you turn the crosshair on",
+   "While the crosshair is on, VanMule quietly checks the game in front. If something is covering the crosshair you get a notification, the crosshair switch turns orange, and the Crosshair page shows the fix"
+  ]
+ },
+ {
+  "version": "3.13.0",
+  "date": "October 2026",
+  "items": [
+   "Crosshair: Discover and your saved crosshairs are now one library. Favorites, All mine and your categories sit on top, and the Discover styles (Pro picks, Crosses, Dots, Circles, X and more) sit underneath",
+   "About 50 ready-made crosshair styles, plus default favorites: green cross, red cross, green dot, red dot and red tee. Click any style to use it; the bookmark adds or removes it from Favorites",
+   "Drag crosshair cards to change their order, and click the star to remove one from Favorites",
+   "If you pick a crosshair while the crosshair switch is off, the switch at the top glows until you turn it on",
+   "New Overlay method setting for the crosshair: Standard, or Stay on top harder for games that keep covering it. Plus a 'Crosshair not showing in a game?' guide (e.g. Counter-Strike 2 needs Fullscreen Windowed)",
+   "Title bar: hide the seasonal decorations completely (✕ Hide decorations / ✨ Decorations), and a ⚡ Lite button to turn Lite mode on or off. Lite mode stays on the next time you open VanMule, hides the decorations, and frees the AI voice's graphics memory after 2 idle minutes",
+   "Stocks: zooming out past the loaded data now switches to the next longer time range (for example 6M to 1Y) so the chart doesn't cut off"
+  ]
+ },
+ {
+  "version": "3.12.0",
+  "date": "October 2026",
+  "items": [
+   "Fantasy overlays (Watch → Fantasy → Overlay): put your matchup in the mini overlay or in its own small scoreboard window that stays on top of your game. Choose Simple (score), Detailed (plus your starters with points and game status) or Everything (plus every matchup in your league). The window can be see-through and locked so clicks go through to the game",
+   "Fantasy lead alerts: a notification when you take the lead or fall behind during games",
+   "Yahoo Fantasy: Connect Yahoo now signs you in inside VanMule and finishes by itself (no code to copy). Your opponent's starters and every league matchup now show for Sleeper, ESPN and Yahoo"
+  ]
+ },
+ {
+  "version": "3.11.0",
+  "date": "October 2026",
+  "items": [
+   "New Crosshair page with a full designer: stack layers (crosshairs, circles, dots, text or your own image), drag them on a pixel grid, and set position, scale, color with opacity, length, thickness, gap, rotation and blur, plus a center dot, outline and outer ring with their own colors. Undo and redo, simple animations (spin, pulse, blink, fade), categories and favorites, 16 popular styles to start from, and share codes (Valorant crosshair codes import too)",
+   "The crosshair sits on top of your game in its own see-through, click-through window. No Game Bar or extension needed. Turn it on with the switch in the title bar, Alt+C, or the mini overlay, and nudge it a pixel at a time if a game's center is off",
+   "New guide in Settings → Audio: use your changed voice on Xbox (party chat from the PC's Xbox app), PlayStation (PS Remote Play), phone calls (Phone Link), or any console or phone with a simple cable, including a one-click safe-volume setup and a test sound"
+  ]
+ },
+ {
+  "version": "3.10.0",
+  "date": "October 2026",
+  "items": [
+   "Instant replay (Record page): keeps the last 15 seconds to 2 minutes of your screen, game sound and voice in memory. Press Alt+F10 (or the overlay or phone button) to save it as an MP4. It's off until you turn it on, so nothing records in the background unless you want it to",
+   "Pages open instantly with the last scores, deals and prices you saw, then update in the background",
+   "Lighter in the background: one shared timer runs all background updates, pages you hide stop updating, and the window stops animating and redrawing meters while you're in a game",
+   "AI voices free their graphics memory after 10 minutes unused (change it in Settings → AI voices) and reload in a few seconds when you need them again; the graphics-card readout no longer runs when it isn't on screen",
+   "Lite mode (Settings → General): just the voice changer, soundboard and recording, with everything else hidden and paused",
+   "Fonts are built in, so the window opens faster and looks right offline",
+   "Phone remote: save an instant replay, type text for your voice to say, see live scores, and copy your recent memes to the PC",
+   "OBS overlay (Settings → Phone & Discord): shows your current voice, sounds as they play and live scores on your stream",
+   "Sync between PCs (Settings → Files): keep settings, boards, favorites, bets and watchlists the same on every PC through OneDrive, Dropbox or Google Drive. Settings are also backed up to a file automatically",
+   "Even out sound volumes and Lower music while I talk (Settings → General)"
+  ]
+ },
+ {
+  "version": "3.9.0",
+  "date": "October 2026",
+  "items": [
+   "Phone remote: turn it on in Settings → Phone & Discord and scan the QR code. Your phone becomes a remote for the soundboard, voices, hear-back and mute over your home Wi-Fi, with nothing to install",
+   "Discord status: your Discord profile can show \"Talking as Robot\" while VanMule runs (one-time setup with a free Discord app ID)",
+   "Stocks: a Portfolio tab with value, today's move and total gain; price alerts (above, below or a big daily move, optionally posted to Discord); earnings dates for your stocks on the Watch calendar; and compare any two symbols on one chart",
+   "Betting: a new My bets tab in Watch. Track bets from any game card or by clicking a DraftKings price; spreads, totals and moneylines settle themselves when the game ends. Includes your record and profit, a parlay calculator, and alerts when a line moves",
+   "Watch: box scores and play-by-play for live and finished games, and a heads-up a few hours before your team plays on a channel or app you don't have",
+   "Mini overlay: a Quick sounds & memes section with your starred sounds and your latest saved memes (click to copy into Discord)",
+   "Memes: make animated GIFs from a GIF, a video clip or a YouTube link, with the same text tools",
+   "Shopping: paste any product link to watch its price and get an alert when it drops. Amazon links work if you add a Keepa API key, which Keepa charges for",
+   "Settings search (or press Ctrl+,): type overlay, shortcut, theme and so on to jump straight to that setting",
+   "Report a problem in Settings → General saves and copies a short report with recent errors; keys, passwords and Discord links are removed",
+   "Faster: stock charts load only when you open Stocks, game detection checks less often, and live scores refresh only when something uses them"
+  ]
+ },
+ {
+  "version": "3.8.0",
+  "date": "October 2026",
+  "items": [
+   "New Memes page: the 100 most popular meme templates, or your own picture (upload, drag in or paste). Add as many text boxes as you like, drag them around, change font, size, colors and outline, or add a white caption bar. Copy straight into Discord or save as PNG",
+   "New Shopping page: the Slickdeals front page, popular deals, hot deals and freebies, with prices, stores and thumbs-up counts. Filter by store or word, and get alerts (and Discord posts) when a deal mentions something you want"
+  ]
+ },
+ {
+  "version": "3.7.0",
+  "date": "October 2026",
+  "items": [
+   "New Stocks page: candle, bar, line and area charts from 1 day to max, with 1-minute to monthly intervals",
+   "Indicators: volume, SMA 20/50/200, EMA 12/26, Bollinger Bands, VWAP, RSI and MACD, plus price lines you can draw. Starts on the S&P 500, with a watchlist and search for any stock, ETF, index or crypto",
+   "New title bar across the top: the page name, a Mini overlay button on every page, your hold-to-talk key, and a one-click switch to stop seasonal animations",
+   "The mini overlay shortcut is now Alt+X",
+   "Hide pages and tabs you don't use (Settings → General → Customize menus)",
+   "Add voices, Record and Watch open on their first tab again when you come back to them",
+   "Games deals are sorted by deal grade to start",
+   "Live scores in the mini overlay now sit below your voices",
+   "League buttons no longer show team counts"
+  ]
+ },
+ {
+  "version": "3.6.0",
+  "date": "October 2026",
+  "items": [
+   "DraftKings lines and player props on every game: anytime touchdown, passing, rushing and receiving yards, receptions, NBA points, rebounds, assists and more",
+   "Futures: Super Bowl, NBA Finals, Stanley Cup, World Series and more, with each team's implied chance",
+   "Live scores in the mini overlay, plus an optional soundboard sound when your team scores or wins",
+   "Tonight: everything on today, plus deals on games you track and free games",
+   "Standings with the playoff line, injury reports, kickoff weather and line movement on game cards",
+   "Fantasy football: Sleeper, ESPN and Yahoo leagues with your matchup and when each player plays",
+   "Deal grades (A+ to F) on Steam and Xbox deals, free games from Epic and elsewhere, a Game Pass tracker, Steam wishlist import and 30-day player trends for friend slop",
+   "PlayStation and Nintendo sale pages in one place",
+   "Discord alerts: price drops, free games, reminders and scores posted to a channel",
+   "Voice tools: hold a key to talk in another voice, switch voices automatically per game, text to speech in your voice, and voice packs to share with friends",
+   "Preview soundboard sounds privately with the 🎧 button",
+   "Quick setup to pick your look, teams and streaming services",
+   "Games that aren't on your streaming services are flagged"
+  ]
+ },
+ {
+  "version": "3.5.0",
+  "date": "October 2026",
+  "items": [
+   "Reminders: get a Windows notification 10 minutes to 1 day before your teams' games, prime-time NFL, fights, TV episodes and releases. Tap 🔔 on any event to add or skip just that one",
+   "Final score alerts for your teams (optional)",
+   "Add any event to Google Calendar with one click, or export everything as a calendar file",
+   "Right-click the tray icon to see what's coming up next, with spreads. Hover over it to see the next event",
+   "The Watch page always opens on Upcoming when you come back to it",
+   "Mini overlay: Alt+O shows or hides it from anywhere. The shortcut appears on the overlay buttons, in the overlay and in Settings",
+   "Mini overlay sections (Voice, Record, Voices, Routing) can be collapsed, and you can switch recording between Video, Audio and Voice only",
+   "Seasonal themes: new option to keep the decorations but stop the animation",
+   "Fixed sports scores not loading when ESPN rejects a long date range"
+  ]
+ },
+ {
+  "version": "3.4.2",
+  "date": "October 2026",
+  "items": [
+   "Cleaner VanMule logo: smoother mule, a proper microphone, and a crisper icon for the taskbar, tray and installer"
+  ]
+ },
+ {
+  "version": "3.4.1",
+  "date": "October 2026",
+  "items": [
+   "Boxing and other MMA fights with odds now work right away with a built-in key"
+  ]
+ },
+ {
+  "version": "3.4.0",
+  "date": "October 2026",
+  "items": [
+   "Spreads everywhere: point spread, over/under and moneyline on every game, filled in from ESPN's game page when the schedule doesn't have the line yet",
+   "Final scores now show who covered the spread and whether the game went over or under",
+   "UFC fights: every card with the main event, the full card, arena and city, moneyline odds and results (Watch → Teams → UFC & Boxing)",
+   "Boxing and other MMA (PFL, ONE and more) with moneyline odds, using a free key from The Odds API. You can follow just the fighters you care about",
+   "Soundboard: cut clips from YouTube. Paste a link, pick from here to here (drag or type the times), and add it",
+   "The clip editor can now zoom in and take exact start and end times",
+   "Xbox deals: if your network blocks Microsoft's deals list, VanMule shows Microsoft Store deals with 1-year lows instead and tells you what to allow",
+   "Settings moved to the bottom of the left bar, with a new mini overlay button above it. The Play page's overlay button is bigger and brighter"
+  ]
+ },
+ {
+  "version": "3.3.3",
+  "date": "October 2026",
+  "items": [
+   "1-year lows on Steam deals and tracked games now work right away with a built-in IsThereAnyDeal key"
+  ]
+ },
+ {
+  "version": "3.3.2",
+  "date": "October 2026",
+  "items": [
+   "Game release dates for every platform (PlayStation and Switch too) now work right away with a built-in RAWG key"
+  ]
+ },
+ {
+  "version": "3.3.1",
+  "date": "October 2026",
+  "items": [
+   "Movies and IMDb / Rotten Tomatoes scores now work right away with built-in keys. You can still paste your own in Watch → Setup."
+  ]
+ },
+ {
+  "version": "3.3.0",
+  "date": "October 2026",
+  "items": [
+   "New Games tab with Steam and Xbox deals in sortable tables. Great deals are highlighted green, and badges mark all-time lows, 1-year lows and near-low prices",
+   "My tracker: star any Steam or Xbox game, set the price you want, and VanMule checks every 6 hours and alerts you when it hits your price or a new low",
+   "Friend slop leaderboard: R.E.P.O., PEAK, Lethal Company and more, with Steam rating, review count, estimated owners, players right now and yesterday's peak. Add your own or discover popular co-op games under $20",
+   "Video game releases on the Watch calendar (GTA VI is already on it for Nov 19). Search games, add them to your calendar, or add any release yourself",
+   "Optional free keys: IsThereAnyDeal for 1-year lows, RAWG for release dates on every platform"
+  ]
+ },
+ {
+  "version": "3.2.0",
+  "date": "October 2026",
+  "items": [
+   "New Watch tab: a calendar of your teams' games, prime-time NFL, TV episodes and movies",
+   "Game cards show kickoff time, stadium and city, the betting spread and over/under, live scores and final scores, plus the channel and which streaming services carry it",
+   "Follow as many teams as you like across the NFL, NBA, MLB, NHL, WNBA, college football and basketball, MLS and the Premier League",
+   "Scores page with each team's last result and next game",
+   "Follow TV shows and get recommendations with IMDb and Rotten Tomatoes scores; movies show where they stream (needs two free keys, set up in Watch → Setup)",
+   "Themes: Midnight, Forest, Grape, Rose, Slate and an anime-style Shinobi theme, plus Halloween, Thanksgiving and Christmas themes that switch on by themselves (you can turn that off)",
+   "Removed the built-in background sounds. Upload your own background music instead; it loops under your voice"
+  ]
+ },
+ {
+  "version": "3.1.0",
+  "date": "October 2026",
+  "items": [
+   "Removed the built-in soundboard sounds",
+   "New Get sounds browser: search MyInstants, browse trending, top and category lists, preview before adding, and save straight into a folder",
+   "Starter packs add 20 popular sounds on a theme in one click",
+   "Free sound effects from Wikimedia Commons, with credits saved for you"
+  ]
+ },
+ {
+  "version": "3.0.1",
+  "date": "October 2026",
+  "items": [
+   "Finished renaming everything from Vox Forge to VanMule. Your settings and saved sounds move over automatically."
+  ]
+ },
+ {
+  "version": "3.0.0",
+  "date": "October 2026",
+  "items": [
+   "Diagnostics in Settings: one click checks the virtual mic, Discord's voice settings, your mic, the AI engine, game audio and voice-message pasting, with fix buttons",
+   "Automatic updates from GitHub releases, with this What's new list after each update",
+   "AI noise removal before the voice changer, live graphics-memory and speed readout, Auto response time, Find my pitch, and faster first use",
+   "Soundboard: trim sounds, folders, import from MyInstants or any link, and a Now playing bar",
+   "Conversations: change a line's voice after recording, background music, undo and redo, and overlapping lines",
+   "Backup and restore, a quick tour for new users, and a smaller install"
+  ]
+ },
+ {
+  "version": "2.7.0",
+  "date": "October 2026",
+  "items": [
+   "Conversation editor: lines in different voices, trimming, fades, pauses, reordering, export to Discord",
+   "Edit any voice message"
+  ]
+ },
+ {
+  "version": "2.6.0",
+  "date": "October 2026",
+  "items": [
+   "Voice messages: record in your changed voice and paste into Discord with Ctrl+V"
+  ]
+ },
+ {
+  "version": "2.5.0",
+  "date": "October 2026",
+  "items": [
+   "Game recording with game audio and your voice",
+   "Hear-back volume",
+   "Cleaner pitch and response controls",
+   "Picture search, avatars and paste/drop pictures"
+  ]
+ },
+ {
+  "version": "2.4.0",
+  "date": "October 2026",
+  "items": [
+   "Play: favorites filter, sorting, search and drag-to-reorder"
+  ]
+ },
+ {
+  "version": "2.3.0",
+  "date": "October 2026",
+  "items": [
+   "Remove all AI voices"
+  ]
+ },
+ {
+  "version": "2.2.0",
+  "date": "October 2026",
+  "items": [
+   "Uses RVC .index files for a closer match to the original voice"
+  ]
+ },
+ {
+  "version": "2.1.0",
+  "date": "October 2026",
+  "items": [
+   "Import a whole folder of voice models at once"
+  ]
+ }
+]

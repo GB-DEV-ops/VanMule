@@ -1,0 +1,83 @@
+{
+  "name": "vanmule",
+  "productName": "VanMule",
+  "version": "3.23.3",
+  "description": "VanMule voice changer and soundboard",
+  "author": "VanMule",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis --x64"
+  },
+  "build": {
+    "appId": "com.vanmule.app",
+    "productName": "VanMule",
+    "files": [
+      "main.js",
+      "preload.js",
+      "overlay-preload.js",
+      "mini-preload.js",
+      "pcstats.js",
+      "keys.json",
+      "app/**",
+      "engine/**",
+      "build/icon.png",
+      "node_modules/onnxruntime-node/**",
+      "node_modules/onnxruntime-common/**",
+      "!node_modules/onnxruntime-node/bin/napi-v6/linux/**",
+      "!node_modules/onnxruntime-node/bin/napi-v6/darwin/**",
+      "!node_modules/onnxruntime-node/bin/napi-v6/win32/arm64/**",
+      "!app/arcade/test.html",
+      "!app/arcade/SPEC.md",
+      "!app/arcade/*.md",
+      "!app/arcade/tests/**"
+    ],
+    "extraResources": [
+      {
+        "from": "scripts",
+        "to": "scripts"
+      },
+      {
+        "from": "templates",
+        "to": "templates"
+      }
+    ],
+    "afterPack": "build/afterPack.js",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "VanMule",
+      "runAfterFinish": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "artifactName": "VanMule-Setup-${version}.exe"
+    },
+    "asarUnpack": [
+      "node_modules/onnxruntime-node/**"
+    ],
+    "npmRebuild": false,
+    "electronLanguages": [
+      "en-US"
+    ]
+  },
+  "devDependencies": {
+    "electron": "33.2.1",
+    "electron-builder": "25.1.8",
+    "resedit": "2.0.3"
+  },
+  "dependencies": {
+    "onnxruntime-node": "1.22.0"
+  }
+}
